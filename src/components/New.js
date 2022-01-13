@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import NewsItems from './NewsItems'
 import PnButtn from './PnButtn';
+import PropTypes from 'prop-types'
 
 export default class New extends Component {
     articles = [
@@ -265,6 +266,8 @@ export default class New extends Component {
         "content": "To get a roundup of TechCrunchs biggest and most important stories delivered to your inbox every day at 3 p.m. PST, subscribe here.\r\nHello and welcome to Daily Crunch for January 10, 2022! For those … [+5515 chars]"
         }
         ]
+        
+
     constructor(){
         super();
         this.state = {
@@ -274,8 +277,19 @@ export default class New extends Component {
         }
     }
 
+    static defaultProps ={
+        country: "ca",
+        category: "general"
+    }
+
+    static propTypes = {
+        country: PropTypes.string,
+        category: PropTypes.string
+    }
+    
+
     async componentDidMount(){
-        let url =`https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=c23754f3569f48fa8e55e24702798dad&page=1&pageSize=5`;
+        let url =`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=c23754f3569f48fa8e55e24702798dad&page=1&pageSize=10`;
         let data = await fetch(url);
         let parseData = await data.json();
         console.log(parseData);
@@ -284,7 +298,7 @@ export default class New extends Component {
     
    handlePrevbttn = async () =>{
         console.log("previous")
-        let url =`https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=c23754f3569f48fa8e55e24702798dad&page=${this.state.page - 1}&pageSize=5`;
+        let url =`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=c23754f3569f48fa8e55e24702798dad&page=${this.state.page - 1}&pageSize=10`
         let data = await fetch(url);
         let parseData = await data.json();
         
@@ -296,11 +310,11 @@ export default class New extends Component {
 
      handleNextbttn = async () => {
         console.log("Next")
-        if(this.state.page + 1 > Math.ceil(this.state.totalResults/5)){
+        if(this.state.page + 1 > Math.ceil(this.state.totalResults/10)){
 
         }
         else{
-        let url =`https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=c23754f3569f48fa8e55e24702798dad&page=${this.state.page + 1}&pageSize=5`;
+        let url =`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=c23754f3569f48fa8e55e24702798dad&page=${this.state.page + 1}&pageSize=10`;
         let data = await fetch(url);
         let parseData = await data.json();
         console.log(parseData);
@@ -321,7 +335,7 @@ export default class New extends Component {
                 </div>
                 }
                 )}
-                <PnButtn handleNextbttn = {this.handleNextbttn} handlePrevbttn = {this.handlePrevbttn} page = {this.state.page}/>
+                <PnButtn handleNextbttn = {this.handleNextbttn} handlePrevbttn = {this.handlePrevbttn} page = {this.state.page} totalResults={this.state.totalResults}/>
                 
      
                 </div>
